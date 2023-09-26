@@ -1,38 +1,49 @@
-import { createAction } from '@reduxjs/toolkit';
-import { resetWarningCache } from 'prop-types';
+import { createAction, createReducer } from '@reduxjs/toolkit';
 
-type CounterState = { count: number };
-type CounterAction =
-  | ReturnType<typeof increment>
-  | ReturnType<typeof decrement>
-  | ReturnType<typeof reset>;
+// type CounterState = { count: number };
+// type CounterAction =
+//   | ReturnType<typeof increment>
+//   | ReturnType<typeof decrement>
+//   | ReturnType<typeof reset>;
 
-const increment = createAction('INCREMENT', (amount: number) => {
+export const increment = createAction('INCREMENT', (amount: number) => {
   return {
     payload: amount,
   };
 });
 
-const decrement = createAction('DECREMENT', (amount: number) => {
+export const decrement = createAction('DECREMENT', (amount: number) => {
   return {
     payload: amount,
   };
 });
 
-const reset = createAction('RESET');
+export const reset = createAction('RESET');
 
-export const reducer = (state: CounterState, action: CounterAction) => {
-  if (action.type === increment.type) {
-    return { count: state.count + action.payload };
-  }
+export const counterReducer = createReducer({ count: 0 }, (builder) => {
+  builder.addCase(increment, (state, action) => {
+    state.count += action.payload;
+  });
+  builder.addCase(decrement, (state, action) => {
+    state.count -= action.payload;
+  });
+  builder.addCase(reset, (state) => {
+    state.count = 0;
+  });
+});
 
-  if (action.type === decrement.type) {
-    return { count: state.count - action.payload };
-  }
+// export const reducer = (state: CounterState, action: CounterAction) => {
+//   if (action.type === increment.type) {
+//     return { count: state.count + action.payload };
+//   }
 
-  if (action.type === reset.type) {
-    return { count: 0 };
-  }
+//   if (action.type === decrement.type) {
+//     return { count: state.count - action.payload };
+//   }
 
-  return state;
-};
+//   if (action.type === reset.type) {
+//     return { count: 0 };
+//   }
+
+//   return state;
+// };
